@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ReportGenius.Application/ReportGenius.Application.csproj" />
+  <Project Path="ReportGenius.Common/ReportGenius.Common.csproj" />
+  <Project Path="ReportGenius.Core/ReportGenius.Domain.csproj" />
+  <Project Path="ReportGenius.Infrastructure/ReportGenius.Infrastructure.csproj" />
+  <Project Path="ReportGenius/ReportGenius.csproj" />
+</Solution>

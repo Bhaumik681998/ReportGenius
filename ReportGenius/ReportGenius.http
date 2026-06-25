@@ -1,0 +1,6 @@
+@ReportGenius_HostAddress = http://localhost:5264
+
+GET {{ReportGenius_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
