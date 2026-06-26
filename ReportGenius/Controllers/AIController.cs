@@ -8,15 +8,14 @@ namespace ReportGenius.Controllers
     [Route("api/ai")]
     public sealed class AIController : ControllerBase
     {
-        private readonly IAIService _aiService;
-
-        public AIController(IAIService aiService)
+        private readonly IAIQueryService _aiQueryService;
+        public AIController(IAIQueryService aiQueryService)
         {
-            _aiService = aiService;
+            _aiQueryService = aiQueryService;
         }
 
         [HttpPost("generate-sql")]
-        public async Task<IActionResult> GenerateSql([FromBody] GenerateSqlRequest request,CancellationToken cancellationToken)
+        public async Task<IActionResult> GenerateSql([FromBody] GenerateSqlRequest request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.Prompt))
             {
@@ -27,13 +26,9 @@ namespace ReportGenius.Controllers
                 });
             }
 
-            var sql = await _aiService.GenerateSqlAsync(request.Prompt,cancellationToken);
+            var response = await _aiQueryService.GenerateQueryAsync(request, cancellationToken);
 
-            return Ok(new GenerateSqlResponse
-            {
-                Success = true,
-                Sql = sql
-            });
+            return Ok(response);
         }
     }
 }

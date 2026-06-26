@@ -5,5 +5,7 @@
         public bool Success { get; set; }
 
         public string Sql { get; set; } = string.Empty;
+
+        public IEnumerable<dynamic>? Data { get; set; }
     }
 }

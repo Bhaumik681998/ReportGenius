@@ -63,6 +63,8 @@ namespace ReportGenius.Infrastructure.Database.Extensions
             // Table Selector
             services.AddScoped<IAITableSelector, AITableSelector>();
 
+            services.AddScoped<IAIQueryService, AIQueryService>();
+
             return services;
         }
     }
