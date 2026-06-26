@@ -33,9 +33,19 @@ namespace ReportGenius.Infrastructure.AI.Clients
                 }
             };
 
+            Console.WriteLine("========= OLLAMA REQUEST =========");
+            Console.WriteLine($"Model : {request.Model}");
+            Console.WriteLine($"Prompt Length : {request.Prompt.Length}");
+            Console.WriteLine(request.Prompt);
+            Console.WriteLine("==================================");
+
             var response = await _httpClient.PostAsJsonAsync("/api/generate",request,cancellationToken);
 
+            Console.WriteLine("Request Sent Successfully");
+
             response.EnsureSuccessStatusCode();
+
+            Console.WriteLine(response.StatusCode);
 
             var result = await response.Content.ReadFromJsonAsync<OllamaResponse>(cancellationToken: cancellationToken);
 

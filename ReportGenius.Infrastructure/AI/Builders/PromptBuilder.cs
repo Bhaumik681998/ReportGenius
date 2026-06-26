@@ -5,49 +5,53 @@ namespace ReportGenius.Infrastructure.AI.Builders
 {
     public static class PromptBuilder
     {
-        public static string BuildSqlPrompt(string userPrompt,DatabaseSchema schema)
+        public static string BuildSqlPrompt(string userPrompt, DatabaseSchema schema)
         {
-            var schemaBuilder = new StringBuilder();
+            var sb = new StringBuilder();
+
+            sb.AppendLine("""
+You are an expert PostgreSQL SQL Generator.
+
+Return ONLY SQL.
+
+Rules
+
+1. Return ONLY SQL.
+2. No explanation.
+3. No markdown.
+4. Use ONLY tables listed below.
+5. Use ONLY columns listed below.
+6. Never use SELECT *.
+7. Always select only required columns.
+8. Never generate DELETE.
+9. Never generate DROP.
+10. Never generate ALTER.
+
+Database Schema
+
+""");
 
             foreach (var table in schema.Tables)
             {
-                schemaBuilder.AppendLine($"Table : {table.TableName}");
+                sb.AppendLine($"Table : {table.TableName}");
 
-                foreach (var column in table.Columns)
-                {
-                    schemaBuilder.AppendLine(
-                        $"   - {column.ColumnName} ({column.DataType})");
-                }
+                sb.Append("Columns : ");
 
-                schemaBuilder.AppendLine();
+                sb.AppendLine(string.Join(",",
+                    table.Columns.Select(x => x.ColumnName)));
+
+                sb.AppendLine();
             }
 
-            return $"""
-            You are an expert PostgreSQL SQL Generator.
-            
-            Below is the database schema.
-            
-            {schemaBuilder}
-            
-            Rules
-            
-            1. Return ONLY SQL.
-            2. Never explain.
-            3. Never return markdown.
-            4. Never use tables that are not present in the schema.
-            5. Never use columns that are not present in the schema.
-            6. Never generate DROP.
-            7. Never generate TRUNCATE.
-            8. Never generate ALTER.
-            9. Never generate CREATE DATABASE.
-            10. Never generate DELETE without WHERE.
-            
-            User Request
-            
-            {userPrompt}
-            
-            SQL:
-            """;
+            sb.AppendLine("User Request");
+
+            sb.AppendLine(userPrompt);
+
+            sb.AppendLine();
+
+            sb.Append("SQL : ");
+
+            return sb.ToString();
         }
 
         public static string BuildChatPrompt(string prompt)

@@ -14,7 +14,7 @@
 
         public int MaxTokens { get; set; } = 4096;
 
-        public int TimeoutSeconds { get; set; } = 120;
+        public int TimeoutSeconds { get; set; } = 880;
 
         public bool EnableLogging { get; set; } = true;
     }
