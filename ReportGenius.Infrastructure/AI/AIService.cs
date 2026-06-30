@@ -26,13 +26,19 @@ namespace ReportGenius.Infrastructure.AI
             // Read Database Schema
             var schema = await _schemaProvider.GetSchemaAsync(cancellationToken);
 
+            stopwatch.Stop();
+
             Console.WriteLine("--------------------------------");
             Console.WriteLine($"Schema Read : {stopwatch.ElapsedMilliseconds} ms");
             Console.WriteLine($"Total Tables : {schema.Tables.Count}");
             Console.WriteLine("--------------------------------");
 
+            stopwatch.Restart();
+
             // Step-1 : AI selects required tables
             var selectedTables = await _tableSelector.SelectTablesAsync(userPrompt, schema, cancellationToken);
+
+            stopwatch.Stop();
 
             Console.WriteLine("--------------------------------");
             Console.WriteLine($"Table Selection : {stopwatch.ElapsedMilliseconds} ms");
@@ -44,6 +50,8 @@ namespace ReportGenius.Infrastructure.AI
 
             Console.WriteLine("--------------------------------");
 
+            stopwatch.Restart();
+
             // Step-2 : Build filtered schema
             var filteredSchema = new DatabaseSchema();
 
@@ -54,6 +62,14 @@ namespace ReportGenius.Infrastructure.AI
                     filteredSchema.Tables.Add(table);
                 }
             }
+
+            stopwatch.Stop();
+
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine($"Schema Filtering : {stopwatch.ElapsedMilliseconds} ms");
+            Console.WriteLine("--------------------------------");
+
+            stopwatch.Restart();
 
             // Safety check
             if (!filteredSchema.Tables.Any())

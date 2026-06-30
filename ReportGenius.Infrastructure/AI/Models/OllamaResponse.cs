@@ -15,6 +15,7 @@
         public long LoadDuration { get; set; }
 
         public int PromptEvalCount { get; set; }
+        public long PromptEvalDuration { get; set; }
 
         public int EvalCount { get; set; }
 

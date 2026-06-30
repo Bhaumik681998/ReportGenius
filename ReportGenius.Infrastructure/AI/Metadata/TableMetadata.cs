@@ -4,6 +4,16 @@
     {
         public string TableName { get; set; } = string.Empty;
 
+        public string PrimaryKey { get; set; } = string.Empty;
+
+        public List<string> DisplayColumns { get; set; } = new();
+
+        public List<string> SearchColumns { get; set; } = new();
+
+        public List<string> FilterColumns { get; set; } = new();
+
+        public List<string> HiddenColumns { get; set; } = new();
+
         public List<string> Columns { get; set; } = new();
     }
 }

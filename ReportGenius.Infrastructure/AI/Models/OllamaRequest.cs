@@ -11,6 +11,7 @@ namespace ReportGenius.Infrastructure.AI.Models
         public bool Stream { get; set; } = false;
 
         public OllamaOptions Options { get; set; } = new();
+        public string KeepAlive { get; set; } = "30m";
     }
 
     public sealed class OllamaOptions
@@ -18,5 +19,6 @@ namespace ReportGenius.Infrastructure.AI.Models
         public double Temperature { get; set; }
         [JsonPropertyName("num_predict")]
         public int NumPredict { get; set; }
+        public int NumCtx { get; set; } = 2048;
     }
 }

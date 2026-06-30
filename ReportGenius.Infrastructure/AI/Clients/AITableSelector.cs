@@ -25,39 +25,65 @@ namespace ReportGenius.Infrastructure.AI.Clients
         //    return tables;
         //}
 
+        //        public async Task<IReadOnlyList<string>> SelectTablesAsync(string userPrompt, DatabaseSchema schema, CancellationToken cancellationToken = default)
+        //        {
+        //            var prompt = TableSelectionPromptBuilder.Build(userPrompt, schema);
+
+        //            Console.WriteLine(prompt.Length);
+        //            var response = await _ollamaClient.GenerateAsync(
+        //                """
+        //Return ONLY the table name.
+
+        //User Request:
+        //Show all users
+
+        //Available Tables:
+        //usermaster
+        //categorymaster
+        //citymaster
+
+        //Answer:
+        //""",
+        //                cancellationToken);
+
+        //            //var tables = response.Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).Distinct().ToList();
+        //            var tables = response
+        //    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+        //    .Select(x => x.Trim())
+        //    .Select(x => x.Replace("*", ""))
+        //    .Select(x => x.Replace("`", ""))
+        //    .Select(x => x.Replace("-", ""))
+        //    .Select(x => x.Trim())
+        //    .Distinct(StringComparer.OrdinalIgnoreCase)
+        //    .ToList();
+
+        //            return tables;
+        //        }
+
         public async Task<IReadOnlyList<string>> SelectTablesAsync(string userPrompt, DatabaseSchema schema, CancellationToken cancellationToken = default)
         {
             var prompt = TableSelectionPromptBuilder.Build(userPrompt, schema);
 
-            Console.WriteLine(prompt.Length);
+            Console.WriteLine("========== TABLE SELECTION ==========");
+            Console.WriteLine(prompt);
+            Console.WriteLine("=====================================");
+
             var response = await _ollamaClient.GenerateAsync(
-                """
-Return ONLY the table name.
-
-User Request:
-Show all users
-
-Available Tables:
-usermaster
-categorymaster
-citymaster
-
-Answer:
-""",
+                prompt,
                 cancellationToken);
 
-            //var tables = response.Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).Distinct().ToList();
             var tables = response
-    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-    .Select(x => x.Trim())
-    .Select(x => x.Replace("*", ""))
-    .Select(x => x.Replace("`", ""))
-    .Select(x => x.Replace("-", ""))
-    .Select(x => x.Trim())
-    .Distinct(StringComparer.OrdinalIgnoreCase)
-    .ToList();
+                .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Select(x => x.Replace("*", ""))
+                .Select(x => x.Replace("`", ""))
+                .Select(x => x.Replace("-", ""))
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
             return tables;
         }
+
     }
 }
